@@ -187,10 +187,11 @@
   .sim-grid{
     display:grid; grid-template-columns:1fr 1fr auto; gap:16px; align-items:end; margin-top:22px;
   }
-  .sim-field{display:flex; flex-direction:column; gap:6px; font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--sea-deep); font-weight:700;}
+  .sim-field{display:flex; flex-direction:column; gap:6px; font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--sea-deep); font-weight:700; min-width:0;}
   .sim-field input{
     font-family:'Work Sans', sans-serif; font-size:1rem; padding:11px 12px; border-radius:10px;
     border:1.5px solid var(--line); background:var(--paper); color:var(--text);
+    width:100%; min-width:0; max-width:100%;
   }
   .sim-field input:focus{outline:2px solid var(--sea); outline-offset:1px; border-color:var(--sea);}
   .sim-btn{justify-content:center; padding:12px 22px; height:44px; cursor:pointer; border:none; font-size:.9rem;}
@@ -393,11 +394,13 @@
     display:flex; flex-direction:column; gap:6px;
     font-size:.74rem; text-transform:uppercase; letter-spacing:.06em;
     color:var(--sea-deep); font-weight:700;
+    min-width:0; /* deixa o campo encolher para não transbordar a caixa (ex.: datas no iOS Safari) */
   }
   .booking-field.full{grid-column:1 / -1;}
   .booking-field input, .booking-field textarea, .booking-field select{
     font-family:'Work Sans', sans-serif; font-size:1rem; padding:11px 12px; border-radius:10px;
-    border:1.5px solid var(--line); background:var(--paper); color:var(--text); width:100%;
+    border:1.5px solid var(--line); background:var(--paper); color:var(--text);
+    width:100%; min-width:0; max-width:100%;
   }
   .booking-field textarea{resize:vertical; min-height:84px;}
   .booking-field input:focus, .booking-field textarea:focus, .booking-field select:focus{
@@ -410,6 +413,13 @@
     .booking{padding:24px 20px;}
     .booking-grid{grid-template-columns:1fr;}
   }
+  /* Telemóvel: em iOS Safari o input[type=date] usa a largura intrínseca e
+     transborda a caixa. Anular o aspeto nativo (só em ecrãs estreitos) faz com
+     que respeite a largura; ao tocar, o seletor de datas nativo abre na mesma. */
+  @media (max-width:760px){
+    .booking-field input[type="date"],
+    .sim-field input[type="date"]{ -webkit-appearance:none; appearance:none; }
+  }
   .edit-note{
     margin-top:26px; font-size:.78rem; color:#9a927b; max-width:52ch; margin-left:auto; margin-right:auto;
   }
@@ -418,6 +428,13 @@
     border-top:1px solid var(--line); padding:28px 0; text-align:center;
     font-size:.8rem; color:var(--ink-soft);
   }
+  footer .foot-addr{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--sea); text-decoration:underline; text-underline-offset:2px;
+    transition:color .18s ease;
+  }
+  footer .foot-addr svg{flex:none;}
+  footer .foot-addr:hover{color:var(--sea-deep);}
 
   /* ---------- REVEAL ----------
      Por defeito o conteúdo está sempre visível (funciona sem JavaScript).
@@ -794,8 +811,6 @@
           <select id="bk-guests">
             <option value="1" data-i18n="bk_guest_1">1 hóspede</option>
             <option value="2" selected data-i18n="bk_guest_2">2 hóspedes</option>
-            <option value="3" data-i18n="bk_guest_3">3 hóspedes</option>
-            <option value="4" data-i18n="bk_guest_4">4 hóspedes</option>
           </select>
         </label>
         <label class="booking-field">
@@ -823,7 +838,7 @@
 </section>
 
 <footer>
-  <div class="wrap">Refúgio da Maré · Rua Maria do Carmo Fernandes, Ericeira, Portugal</div>
+  <div class="wrap">Refúgio da Maré · <a class="foot-addr" href="https://maps.app.goo.gl/iGUhWWaKEfRYZ6PWA" target="_blank" rel="noopener noreferrer" title="Google Maps"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>Rua Maria do Carmo Fernandes, Ericeira, Portugal</a></div>
 </footer>
 
 <script>
