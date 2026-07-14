@@ -207,6 +207,8 @@
   .sim-totals .row{display:flex; justify-content:space-between; font-size:.92rem; color:var(--ink-soft);}
   .sim-totals .row.discount{color:var(--sea); font-weight:600;}
   .sim-totals .row.total{font-size:1.3rem; font-family:'Fraunces',serif; font-weight:600; color:var(--ink); border-top:1px solid var(--line); padding-top:10px; margin-top:4px;}
+  .sim-totals .row.deposit{margin-top:8px; padding:9px 12px; border-radius:10px; background:rgba(15,109,134,.09); color:var(--sea-deep); font-weight:700;}
+  .sim-deposit-note{margin:8px 2px 0; font-size:.78rem; color:var(--ink-soft);}
 
   @media (max-width:860px){
     .simulator-wrap{margin-top:-40px;}
@@ -409,6 +411,14 @@
   .booking-submit{margin-top:20px; width:100%; justify-content:center; padding:14px; font-size:.95rem; cursor:pointer; border:none;}
   .booking-error{color:#7a2b23; font-size:.85rem; margin-top:10px; min-height:1.1em; text-align:center;}
   .booking-hint{margin:12px 0 0; font-size:.8rem; color:var(--ink-soft); text-align:center;}
+  .booking-summary{
+    margin-top:18px; padding:14px 16px; border-radius:12px;
+    background:var(--paper-deep); border:1px solid var(--line);
+  }
+  .booking-summary[hidden]{display:none;}
+  .bk-sum-row{display:flex; justify-content:space-between; gap:12px; font-size:.95rem; color:var(--ink-soft); padding:2px 0;}
+  .bk-sum-row.deposit{margin-top:4px; color:var(--sea-deep); font-weight:700;}
+  .bk-sum-note{margin:8px 0 0; font-size:.78rem; color:var(--ink-soft);}
   @media (max-width:560px){
     .booking{padding:24px 20px;}
     .booking-grid{grid-template-columns:1fr;}
@@ -818,10 +828,15 @@
           <input type="text" id="bk-name" autocomplete="name" placeholder="Nome" data-i18n-ph="bk_name_ph">
         </label>
         <label class="booking-field full">
+          <span data-i18n="bk_phone">Telefone (com indicativo)</span>
+          <input type="tel" id="bk-phone" inputmode="tel" autocomplete="tel" placeholder="+351 912 345 678" data-i18n-ph="bk_phone_ph">
+        </label>
+        <label class="booking-field full">
           <span data-i18n="bk_msg">Mensagem (opcional)</span>
           <textarea id="bk-msg" placeholder="Alguma questão ou pedido especial?" data-i18n-ph="bk_msg_ph"></textarea>
         </label>
       </div>
+      <div class="booking-summary" id="bk-summary" hidden></div>
       <button type="submit" class="btn booking-submit" data-i18n="bk_submit">Enviar pedido de reserva</button>
       <p class="booking-error" id="bk-error" role="alert"></p>
       <p class="booking-hint" data-i18n="bk_hint">Ao enviar, abre-se o teu email já preenchido para refugiodamare31@gmail.com, com as datas e o número de hóspedes. É só carregar em enviar.</p>
@@ -831,7 +846,7 @@
     <div class="booking nojs-only">
       <p style="margin:0 0 16px; color:var(--ink-soft);">Para pedir uma reserva, envia-nos um email com as datas de entrada e saída e o número de hóspedes:</p>
       <div class="contact-actions" style="justify-content:flex-start;">
-        <a class="btn" href="mailto:refugiodamare31@gmail.com?subject=Pedido%20de%20reserva%20%E2%80%94%20Ref%C3%BAgio%20da%20Mar%C3%A9&body=Ol%C3%A1%2C%20gostaria%20de%20reservar%20o%20Ref%C3%BAgio%20da%20Mar%C3%A9%20(Ericeira).%0A%0AEntrada%3A%20%0ASa%C3%ADda%3A%20%0AH%C3%B3spedes%3A%20%0ANome%3A%20">Enviar pedido por email</a>
+        <a class="btn" href="mailto:refugiodamare31@gmail.com?subject=Pedido%20de%20reserva%20%E2%80%94%20Ref%C3%BAgio%20da%20Mar%C3%A9&body=Ol%C3%A1%2C%20gostaria%20de%20reservar%20o%20Ref%C3%BAgio%20da%20Mar%C3%A9%20(Ericeira).%0A%0AEntrada%3A%20%0ASa%C3%ADda%3A%20%0AH%C3%B3spedes%3A%20%0ANome%3A%20%0ATelefone%3A%20">Enviar pedido por email</a>
       </div>
     </div>
   </div>
@@ -842,7 +857,7 @@
 </footer>
 
 <script>
-  var I18N = {"pt":{"meta_title":"Refúgio da Maré · Estúdio na Ericeira, a dois passos do mar","meta_desc":"Refúgio da Maré — estúdio remodelado na Ericeira, a poucos passos da vila e da Reserva Mundial de Surf. Preços por noite e semana, todo o ano.","nav_home_aria":"Refúgio da Maré — início","nav_space":"O Espaço","nav_photos":"Fotos","nav_prices":"Preços","nav_availability":"Disponibilidade","nav_book":"Reservar","lang_aria":"Idioma","hero_eyebrow":"Reserva Mundial de Surf · Costa Oeste","hero_h1":"Um estúdio remodelado, a dois passos do Atlântico.","hero_p":"Interiores claros, madeira natural e o essencial bem feito — na vila que deu nome ao surf português.","sim_h3":"Simula o preço da tua estadia","sim_p":"Escolhe as datas de entrada e saída e vê logo o preço total, com o desconto de estadias longas já aplicado.","sim_checkin":"Entrada","sim_checkout":"Saída","sim_btn":"Calcular preço","about_eyebrow":"O Espaço","about_h2":"Pensado para ficar bem em qualquer estação do ano.","about_lede":"Um estúdio compacto e bem equipado, remodelado do chão ao teto, a uma curta distância do centro da vila e das praias da Ericeira.","about_li1":"Cozinha totalmente equipada, com forno, placa e eletrodomésticos completos","about_li2":"Ar condicionado e quarto com cama de casal e roupeiros com arrumação","about_li3":"Sala de estar confortável, decoração cuidada com toques náuticos","about_li4":"Rua tranquila, residencial, a curta distância da vila e da costa","about_li5":"Ideal para casais, surfistas ou quem procura uma base tranquila na Ericeira","gal_eyebrow":"Por dentro","gal_h2":"As três divisões, tal como são.","gal_cap1":"Quarto","gal_cap2":"Cozinha & sala de jantar","gal_cap3":"Sala de estar","price_eyebrow":"Tarifário 2026","price_h2":"Preço por noite, mês a mês.","price_lede":"Os valores variam com a época — mais altos no verão e em datas de feriado, mais acessíveis fora de época. Estadias de 7 noites têm sempre 5% de desconto sobre o preço avulso.","price_legend1":"Intensidade da procura (barra à esquerda de cada linha)","price_legend2":"Preço de semana completa (7 noites, -5%)","th_period":"Período","th_weekday":"Dom–Qui","th_weekend":"Sex–Sáb","th_week":"Semana completa","th_week_sub":"7 noites","season_winter":"Inverno","season_spring":"Primavera","season_summer":"Verão","season_autumn":"Outono","m_jan":"Janeiro","m_jan_s":"1–31 jan","m_feb":"Fevereiro","m_feb_s":"exceto Carnaval","m_carnaval":"Carnaval","m_carnaval_s":"16–18 fev","m_mar":"Março","m_mar_s":"1–31 mar","m_apr":"Abril","m_apr_s":"exceto Semana Santa","m_easter":"Semana Santa","m_easter_s":"30 mar – 10 abr","m_may":"Maio","m_may_s":"1–31 mai","m_jun":"Junho","m_jun_s":"1–30 jun","m_jul":"Julho","m_jul_s":"1–31 jul","m_aug":"Agosto","m_aug_s":"1–24 ago · pico","m_aug2":"Agosto","m_aug2_s":"25–31 ago · fim de pico","m_sep":"Setembro","m_sep_s":"1–30 set","m_oct":"Outubro","m_oct_s":"1–31 out","m_nov":"Novembro","m_nov_s":"1–30 nov","m_dec":"Dezembro","m_dec_s":"exceto festas","m_newyear":"Festas de fim de ano","m_newyear_s":"20 dez – 2 jan","callout_h3":"A pensar em estadias mais longas","callout_p":"Quem fica uma semana completa — muito comum entre surfistas e quem trabalha remotamente — paga o preço de 7 noites com 5% de desconto face à soma das diárias, já refletido na tabela acima. Para estadias com mais de 7 noites, fala connosco diretamente.","callout_discount_lbl":"em reservas de 7 noites","avail_eyebrow":"Disponibilidade","avail_h2":"Vê que datas já estão reservadas.","avail_lede":"Os dias marcados no calendário já têm reserva. Todos os restantes estão disponíveis — envia-nos as tuas datas para confirmarmos.","avail_iframe_title":"Calendário de disponibilidade do estúdio Refúgio da Maré, na Ericeira","avail_note":"Não consegues ver o calendário?","avail_note_link":"Abre-o numa nova janela","contact_eyebrow":"Reservas","contact_h2":"Queres reservar a tua estadia?","contact_lede":"Escolhe as datas e envia o pedido. Recebemos o teu email e confirmamos a disponibilidade e o preço final — respondemos habitualmente no próprio dia.","bk_checkin":"Entrada","bk_checkout":"Saída","bk_guests":"Hóspedes","bk_guest_1":"1 hóspede","bk_guest_2":"2 hóspedes","bk_guest_3":"3 hóspedes","bk_guest_4":"4 hóspedes","bk_name":"O teu nome","bk_name_ph":"Nome","bk_msg":"Mensagem (opcional)","bk_msg_ph":"Alguma questão ou pedido especial?","bk_submit":"Enviar pedido de reserva","bk_hint":"Ao enviar, abre-se o teu email já preenchido para refugiodamare31@gmail.com, com as datas e o número de hóspedes. É só carregar em enviar.","js_pick_dates":"Escolhe a data de entrada e a data de saída para simular o preço.","js_out_of_range":"Este simulador cobre o tarifário de 2026 (até 2 de janeiro de 2027, incluída a passagem de ano). Para outras datas, contacta-nos diretamente por email.","js_min_night":"A data de saída tem de ser pelo menos uma noite depois da data de entrada.","js_night_out":"Uma ou mais noites deste intervalo caem fora do tarifário de 2026 coberto por este simulador. Contacta-nos diretamente para confirmar o preço.","js_night":"noite","js_nights":"noites","js_subtotal":"subtotal","js_discount":"Desconto de estadia longa (-5%)","js_avg":"Média por noite","js_total":"Total","js_cta":"Pedir reserva destas datas","bkjs_err_dates":"Escolhe as datas de entrada e de saída.","bkjs_err_order":"A data de saída tem de ser depois da data de entrada.","bkjs_subject":"Pedido de reserva","bkjs_to":"a","bkjs_greeting":"Olá, gostaria de reservar o Refúgio da Maré (Ericeira).","bkjs_l_checkin":"Entrada","bkjs_l_checkout":"Saída","bkjs_l_guests":"Hóspedes","bkjs_l_name":"Nome","bkjs_not_given":"(não indicado)","bkjs_message":"Mensagem","bkjs_no_message":"(sem mensagem)"},"en":{"meta_title":"Refúgio da Maré · Studio in Ericeira, a stone's throw from the sea","meta_desc":"Refúgio da Maré — a renovated studio in Ericeira, just steps from the town and the World Surfing Reserve. Nightly and weekly rates, all year round.","nav_home_aria":"Refúgio da Maré — home","nav_space":"The Space","nav_photos":"Photos","nav_prices":"Prices","nav_availability":"Availability","nav_book":"Book","lang_aria":"Language","hero_eyebrow":"World Surfing Reserve · West Coast","hero_h1":"A renovated studio, a stone's throw from the Atlantic.","hero_p":"Bright interiors, natural wood and the essentials done well — in the town that gave Portuguese surf its name.","sim_h3":"Work out the price of your stay","sim_p":"Pick your check-in and check-out dates and see the total price straight away, with the long-stay discount already applied.","sim_checkin":"Check-in","sim_checkout":"Check-out","sim_btn":"Calculate price","about_eyebrow":"The Space","about_h2":"Designed to feel just right in any season.","about_lede":"A compact, well-equipped studio, renovated from floor to ceiling, a short walk from the town centre and the beaches of Ericeira.","about_li1":"Fully equipped kitchen, with oven, hob and a complete set of appliances","about_li2":"Air conditioning and a bedroom with a double bed and wardrobes with plenty of storage","about_li3":"Comfortable living area, tastefully decorated with nautical touches","about_li4":"Quiet, residential street, a short walk from the town and the coast","about_li5":"Ideal for couples, surfers or anyone looking for a peaceful base in Ericeira","gal_eyebrow":"Inside","gal_h2":"The three rooms, just as they are.","gal_cap1":"Bedroom","gal_cap2":"Kitchen & dining area","gal_cap3":"Living area","price_eyebrow":"2026 Rates","price_h2":"Nightly price, month by month.","price_lede":"Rates vary with the season — higher in summer and over holiday dates, more affordable off-season. Stays of 7 nights always get 5% off the standard nightly price.","price_legend1":"Demand level (bar to the left of each row)","price_legend2":"Full-week price (7 nights, -5%)","th_period":"Period","th_weekday":"Sun–Thu","th_weekend":"Fri–Sat","th_week":"Full week","th_week_sub":"7 nights","season_winter":"Winter","season_spring":"Spring","season_summer":"Summer","season_autumn":"Autumn","m_jan":"January","m_jan_s":"Jan 1–31","m_feb":"February","m_feb_s":"except Carnival","m_carnaval":"Carnival","m_carnaval_s":"Feb 16–18","m_mar":"March","m_mar_s":"Mar 1–31","m_apr":"April","m_apr_s":"except Holy Week","m_easter":"Holy Week","m_easter_s":"30 Mar – 10 Apr","m_may":"May","m_may_s":"May 1–31","m_jun":"June","m_jun_s":"Jun 1–30","m_jul":"July","m_jul_s":"Jul 1–31","m_aug":"August","m_aug_s":"Aug 1–24 · peak","m_aug2":"August","m_aug2_s":"Aug 25–31 · end of peak","m_sep":"September","m_sep_s":"Sep 1–30","m_oct":"October","m_oct_s":"Oct 1–31","m_nov":"November","m_nov_s":"Nov 1–30","m_dec":"December","m_dec_s":"except holidays","m_newyear":"New Year holidays","m_newyear_s":"20 Dec – 2 Jan","callout_h3":"Thinking of a longer stay","callout_p":"If you stay a full week — very common among surfers and remote workers — you pay the 7-night price with 5% off the sum of the nightly rates, already reflected in the table above. For stays longer than 7 nights, get in touch with us directly.","callout_discount_lbl":"on 7-night bookings","avail_eyebrow":"Availability","avail_h2":"See which dates are already booked.","avail_lede":"The days marked on the calendar are already booked. All the rest are available — send us your dates and we'll confirm.","avail_iframe_title":"Availability calendar for the Refúgio da Maré studio in Ericeira","avail_note":"Can't see the calendar?","avail_note_link":"Open it in a new window","contact_eyebrow":"Bookings","contact_h2":"Ready to book your stay?","contact_lede":"Pick your dates and send your request. We'll receive your email and confirm availability and the final price — we usually reply the same day.","bk_checkin":"Check-in","bk_checkout":"Check-out","bk_guests":"Guests","bk_guest_1":"1 guest","bk_guest_2":"2 guests","bk_guest_3":"3 guests","bk_guest_4":"4 guests","bk_name":"Your name","bk_name_ph":"Name","bk_msg":"Message (optional)","bk_msg_ph":"Any questions or special requests?","bk_submit":"Send booking request","bk_hint":"When you send, your email opens ready-filled to refugiodamare31@gmail.com, with the dates and number of guests. Just hit send.","js_pick_dates":"Pick your check-in and check-out dates to work out the price.","js_out_of_range":"This calculator covers the 2026 rates (up to 2 January 2027, including New Year). For other dates, get in touch with us directly by email.","js_min_night":"The check-out date must be at least one night after the check-in date.","js_night_out":"One or more nights in this range fall outside the 2026 rates covered by this calculator. Get in touch with us directly to confirm the price.","js_night":"night","js_nights":"nights","js_subtotal":"subtotal","js_discount":"Long-stay discount (-5%)","js_avg":"Average per night","js_total":"Total","js_cta":"Request a booking for these dates","bkjs_err_dates":"Pick your check-in and check-out dates.","bkjs_err_order":"The check-out date must be after the check-in date.","bkjs_subject":"Booking request","bkjs_to":"to","bkjs_greeting":"Hello, I'd like to book Refúgio da Maré (Ericeira).","bkjs_l_checkin":"Check-in","bkjs_l_checkout":"Check-out","bkjs_l_guests":"Guests","bkjs_l_name":"Name","bkjs_not_given":"(not given)","bkjs_message":"Message","bkjs_no_message":"(no message)"},"fr":{"meta_title":"Refúgio da Maré · Studio à Ericeira, à deux pas de la mer","meta_desc":"Refúgio da Maré — studio rénové à Ericeira, à quelques pas du village et de la Réserve mondiale de surf. Tarifs à la nuit et à la semaine, toute l'année.","nav_home_aria":"Refúgio da Maré — accueil","nav_space":"Le logement","nav_photos":"Photos","nav_prices":"Tarifs","nav_availability":"Disponibilités","nav_book":"Réserver","lang_aria":"Langue","hero_eyebrow":"Réserve mondiale de surf · Côte Ouest","hero_h1":"Un studio rénové, à deux pas de l'Atlantique.","hero_p":"Des intérieurs lumineux, du bois naturel et l'essentiel bien pensé — dans le village qui a donné son nom au surf portugais.","sim_h3":"Estimez le prix de votre séjour","sim_p":"Choisissez vos dates d'arrivée et de départ et découvrez aussitôt le prix total, remise longs séjours déjà appliquée.","sim_checkin":"Arrivée","sim_checkout":"Départ","sim_btn":"Calculer le prix","about_eyebrow":"Le logement","about_h2":"Conçu pour se sentir bien en toute saison.","about_lede":"Un studio compact et bien équipé, rénové du sol au plafond, à deux pas du centre du village et des plages d'Ericeira.","about_li1":"Cuisine entièrement équipée, avec four, plaque de cuisson et électroménager complet","about_li2":"Climatisation et chambre avec lit double et penderies de rangement","about_li3":"Salon confortable, décoration soignée aux touches maritimes","about_li4":"Rue calme et résidentielle, à deux pas du village et de la côte","about_li5":"Idéal pour les couples, les surfeurs ou celles et ceux qui cherchent un point d'attache paisible à Ericeira","gal_eyebrow":"À l'intérieur","gal_h2":"Les trois pièces, telles qu'elles sont.","gal_cap1":"Chambre","gal_cap2":"Cuisine & salle à manger","gal_cap3":"Salon","price_eyebrow":"Tarifs 2026","price_h2":"Prix à la nuit, mois par mois.","price_lede":"Les tarifs varient selon la saison — plus élevés en été et pendant les fêtes, plus doux hors saison. Les séjours de 7 nuits bénéficient toujours d'une remise de 5 % sur le prix à la nuit.","price_legend1":"Intensité de la demande (barre à gauche de chaque ligne)","price_legend2":"Prix de la semaine complète (7 nuits, -5 %)","th_period":"Période","th_weekday":"Dim–Jeu","th_weekend":"Ven–Sam","th_week":"Semaine complète","th_week_sub":"7 nuits","season_winter":"Hiver","season_spring":"Printemps","season_summer":"Été","season_autumn":"Automne","m_jan":"Janvier","m_jan_s":"1–31 janv.","m_feb":"Février","m_feb_s":"sauf Carnaval","m_carnaval":"Carnaval","m_carnaval_s":"16–18 févr.","m_mar":"Mars","m_mar_s":"1–31 mars","m_apr":"Avril","m_apr_s":"sauf Semaine sainte","m_easter":"Semaine sainte","m_easter_s":"30 mars – 10 avr.","m_may":"Mai","m_may_s":"1–31 mai","m_jun":"Juin","m_jun_s":"1–30 juin","m_jul":"Juillet","m_jul_s":"1–31 juil.","m_aug":"Août","m_aug_s":"1–24 août · pointe","m_aug2":"Août","m_aug2_s":"25–31 août · fin de pointe","m_sep":"Septembre","m_sep_s":"1–30 sept.","m_oct":"Octobre","m_oct_s":"1–31 oct.","m_nov":"Novembre","m_nov_s":"1–30 nov.","m_dec":"Décembre","m_dec_s":"sauf fêtes","m_newyear":"Fêtes de fin d'année","m_newyear_s":"20 déc. – 2 janv.","callout_h3":"Pensé pour les séjours plus longs","callout_p":"Celles et ceux qui restent une semaine complète — très courant chez les surfeurs et les personnes en télétravail — paient le prix de 7 nuits avec 5 % de remise sur la somme des nuitées, déjà pris en compte dans le tableau ci-dessus. Pour les séjours de plus de 7 nuits, contactez-nous directement.","callout_discount_lbl":"sur les réservations de 7 nuits","avail_eyebrow":"Disponibilités","avail_h2":"Découvrez les dates déjà réservées.","avail_lede":"Les jours indiqués sur le calendrier sont déjà réservés. Toutes les autres dates sont disponibles — envoyez-nous vos dates pour que nous les confirmions.","avail_iframe_title":"Calendrier des disponibilités du studio Refúgio da Maré, à Ericeira","avail_note":"Le calendrier ne s'affiche pas ?","avail_note_link":"Ouvrez-le dans une nouvelle fenêtre","contact_eyebrow":"Réservations","contact_h2":"Envie de réserver votre séjour ?","contact_lede":"Choisissez vos dates et envoyez votre demande. Nous recevons votre e-mail et confirmons la disponibilité et le prix final — nous répondons généralement le jour même.","bk_checkin":"Arrivée","bk_checkout":"Départ","bk_guests":"Voyageurs","bk_guest_1":"1 voyageur","bk_guest_2":"2 voyageurs","bk_guest_3":"3 voyageurs","bk_guest_4":"4 voyageurs","bk_name":"Votre nom","bk_name_ph":"Nom","bk_msg":"Message (facultatif)","bk_msg_ph":"Une question ou une demande particulière ?","bk_submit":"Envoyer la demande de réservation","bk_hint":"En envoyant, votre e-mail s'ouvre déjà prérempli à destination de refugiodamare31@gmail.com, avec les dates et le nombre de voyageurs. Il ne vous reste plus qu'à cliquer sur envoyer.","js_pick_dates":"Choisissez la date d'arrivée et la date de départ pour estimer le prix.","js_out_of_range":"Ce simulateur couvre les tarifs 2026 (jusqu'au 2 janvier 2027, passage à la nouvelle année inclus). Pour d'autres dates, contactez-nous directement par e-mail.","js_min_night":"La date de départ doit être au moins une nuit après la date d'arrivée.","js_night_out":"Une ou plusieurs nuits de cette période se situent en dehors des tarifs 2026 couverts par ce simulateur. Contactez-nous directement pour confirmer le prix.","js_night":"nuit","js_nights":"nuits","js_subtotal":"sous-total","js_discount":"Remise longs séjours (-5 %)","js_avg":"Moyenne par nuit","js_total":"Total","js_cta":"Demander la réservation de ces dates","bkjs_err_dates":"Choisissez les dates d'arrivée et de départ.","bkjs_err_order":"La date de départ doit être postérieure à la date d'arrivée.","bkjs_subject":"Demande de réservation","bkjs_to":"au","bkjs_greeting":"Bonjour, je souhaiterais réserver le Refúgio da Maré (Ericeira).","bkjs_l_checkin":"Arrivée","bkjs_l_checkout":"Départ","bkjs_l_guests":"Voyageurs","bkjs_l_name":"Nom","bkjs_not_given":"(non indiqué)","bkjs_message":"Message","bkjs_no_message":"(sans message)"}};
+  var I18N = {"pt":{"meta_title":"Refúgio da Maré · Estúdio na Ericeira, a dois passos do mar","meta_desc":"Refúgio da Maré — estúdio remodelado na Ericeira, a poucos passos da vila e da Reserva Mundial de Surf. Preços por noite e semana, todo o ano.","nav_home_aria":"Refúgio da Maré — início","nav_space":"O Espaço","nav_photos":"Fotos","nav_prices":"Preços","nav_availability":"Disponibilidade","nav_book":"Reservar","lang_aria":"Idioma","hero_eyebrow":"Reserva Mundial de Surf · Costa Oeste","hero_h1":"Um estúdio remodelado, a dois passos do Atlântico.","hero_p":"Interiores claros, madeira natural e o essencial bem feito — na vila que deu nome ao surf português.","sim_h3":"Simula o preço da tua estadia","sim_p":"Escolhe as datas de entrada e saída e vê logo o preço total, com o desconto de estadias longas já aplicado.","sim_checkin":"Entrada","sim_checkout":"Saída","sim_btn":"Calcular preço","about_eyebrow":"O Espaço","about_h2":"Pensado para ficar bem em qualquer estação do ano.","about_lede":"Um estúdio compacto e bem equipado, remodelado do chão ao teto, a uma curta distância do centro da vila e das praias da Ericeira.","about_li1":"Cozinha totalmente equipada, com forno, placa e eletrodomésticos completos","about_li2":"Ar condicionado e quarto com cama de casal e roupeiros com arrumação","about_li3":"Sala de estar confortável, decoração cuidada com toques náuticos","about_li4":"Rua tranquila, residencial, a curta distância da vila e da costa","about_li5":"Ideal para casais, surfistas ou quem procura uma base tranquila na Ericeira","gal_eyebrow":"Por dentro","gal_h2":"As três divisões, tal como são.","gal_cap1":"Quarto","gal_cap2":"Cozinha & sala de jantar","gal_cap3":"Sala de estar","price_eyebrow":"Tarifário 2026","price_h2":"Preço por noite, mês a mês.","price_lede":"Os valores variam com a época — mais altos no verão e em datas de feriado, mais acessíveis fora de época. Estadias de 7 noites têm sempre 5% de desconto sobre o preço avulso.","price_legend1":"Intensidade da procura (barra à esquerda de cada linha)","price_legend2":"Preço de semana completa (7 noites, -5%)","th_period":"Período","th_weekday":"Dom–Qui","th_weekend":"Sex–Sáb","th_week":"Semana completa","th_week_sub":"7 noites","season_winter":"Inverno","season_spring":"Primavera","season_summer":"Verão","season_autumn":"Outono","m_jan":"Janeiro","m_jan_s":"1–31 jan","m_feb":"Fevereiro","m_feb_s":"exceto Carnaval","m_carnaval":"Carnaval","m_carnaval_s":"16–18 fev","m_mar":"Março","m_mar_s":"1–31 mar","m_apr":"Abril","m_apr_s":"exceto Semana Santa","m_easter":"Semana Santa","m_easter_s":"30 mar – 10 abr","m_may":"Maio","m_may_s":"1–31 mai","m_jun":"Junho","m_jun_s":"1–30 jun","m_jul":"Julho","m_jul_s":"1–31 jul","m_aug":"Agosto","m_aug_s":"1–24 ago · pico","m_aug2":"Agosto","m_aug2_s":"25–31 ago · fim de pico","m_sep":"Setembro","m_sep_s":"1–30 set","m_oct":"Outubro","m_oct_s":"1–31 out","m_nov":"Novembro","m_nov_s":"1–30 nov","m_dec":"Dezembro","m_dec_s":"exceto festas","m_newyear":"Festas de fim de ano","m_newyear_s":"20 dez – 2 jan","callout_h3":"A pensar em estadias mais longas","callout_p":"Quem fica uma semana completa — muito comum entre surfistas e quem trabalha remotamente — paga o preço de 7 noites com 5% de desconto face à soma das diárias, já refletido na tabela acima. Para estadias com mais de 7 noites, fala connosco diretamente.","callout_discount_lbl":"em reservas de 7 noites","avail_eyebrow":"Disponibilidade","avail_h2":"Vê que datas já estão reservadas.","avail_lede":"Os dias marcados no calendário já têm reserva. Todos os restantes estão disponíveis — envia-nos as tuas datas para confirmarmos.","avail_iframe_title":"Calendário de disponibilidade do estúdio Refúgio da Maré, na Ericeira","avail_note":"Não consegues ver o calendário?","avail_note_link":"Abre-o numa nova janela","contact_eyebrow":"Reservas","contact_h2":"Queres reservar a tua estadia?","contact_lede":"Escolhe as datas e envia o pedido. Recebemos o teu email e confirmamos a disponibilidade e o preço final — respondemos habitualmente no próprio dia.","bk_checkin":"Entrada","bk_checkout":"Saída","bk_guests":"Hóspedes","bk_guest_1":"1 hóspede","bk_guest_2":"2 hóspedes","bk_guest_3":"3 hóspedes","bk_guest_4":"4 hóspedes","bk_name":"O teu nome","bk_name_ph":"Nome","bk_msg":"Mensagem (opcional)","bk_msg_ph":"Alguma questão ou pedido especial?","bk_submit":"Enviar pedido de reserva","bk_hint":"Ao enviar, abre-se o teu email já preenchido para refugiodamare31@gmail.com, com as datas e o número de hóspedes. É só carregar em enviar.","js_pick_dates":"Escolhe a data de entrada e a data de saída para simular o preço.","js_out_of_range":"Este simulador cobre o tarifário de 2026 (até 2 de janeiro de 2027, incluída a passagem de ano). Para outras datas, contacta-nos diretamente por email.","js_min_night":"A data de saída tem de ser pelo menos uma noite depois da data de entrada.","js_night_out":"Uma ou mais noites deste intervalo caem fora do tarifário de 2026 coberto por este simulador. Contacta-nos diretamente para confirmar o preço.","js_night":"noite","js_nights":"noites","js_subtotal":"subtotal","js_discount":"Desconto de estadia longa (-5%)","js_avg":"Média por noite","js_total":"Total","js_cta":"Pedir reserva destas datas","bkjs_err_dates":"Escolhe as datas de entrada e de saída.","bkjs_err_order":"A data de saída tem de ser depois da data de entrada.","bkjs_subject":"Pedido de reserva","bkjs_to":"a","bkjs_greeting":"Olá, gostaria de reservar o Refúgio da Maré (Ericeira).","bkjs_l_checkin":"Entrada","bkjs_l_checkout":"Saída","bkjs_l_guests":"Hóspedes","bkjs_l_name":"Nome","bkjs_not_given":"(não indicado)","bkjs_message":"Mensagem","bkjs_no_message":"(sem mensagem)","js_deposit":"Sinal (25%) para reservar","js_deposit_note":"Pago no ato da reserva; combinamos a forma de pagamento por email.","bkjs_l_total":"Total estimado","bkjs_l_deposit":"Sinal a pagar (25%)","bk_phone":"Telefone (com indicativo)","bk_phone_ph":"+351 912 345 678","bkjs_l_phone":"Telefone"},"en":{"meta_title":"Refúgio da Maré · Studio in Ericeira, a stone's throw from the sea","meta_desc":"Refúgio da Maré — a renovated studio in Ericeira, just steps from the town and the World Surfing Reserve. Nightly and weekly rates, all year round.","nav_home_aria":"Refúgio da Maré — home","nav_space":"The Space","nav_photos":"Photos","nav_prices":"Prices","nav_availability":"Availability","nav_book":"Book","lang_aria":"Language","hero_eyebrow":"World Surfing Reserve · West Coast","hero_h1":"A renovated studio, a stone's throw from the Atlantic.","hero_p":"Bright interiors, natural wood and the essentials done well — in the town that gave Portuguese surf its name.","sim_h3":"Work out the price of your stay","sim_p":"Pick your check-in and check-out dates and see the total price straight away, with the long-stay discount already applied.","sim_checkin":"Check-in","sim_checkout":"Check-out","sim_btn":"Calculate price","about_eyebrow":"The Space","about_h2":"Designed to feel just right in any season.","about_lede":"A compact, well-equipped studio, renovated from floor to ceiling, a short walk from the town centre and the beaches of Ericeira.","about_li1":"Fully equipped kitchen, with oven, hob and a complete set of appliances","about_li2":"Air conditioning and a bedroom with a double bed and wardrobes with plenty of storage","about_li3":"Comfortable living area, tastefully decorated with nautical touches","about_li4":"Quiet, residential street, a short walk from the town and the coast","about_li5":"Ideal for couples, surfers or anyone looking for a peaceful base in Ericeira","gal_eyebrow":"Inside","gal_h2":"The three rooms, just as they are.","gal_cap1":"Bedroom","gal_cap2":"Kitchen & dining area","gal_cap3":"Living area","price_eyebrow":"2026 Rates","price_h2":"Nightly price, month by month.","price_lede":"Rates vary with the season — higher in summer and over holiday dates, more affordable off-season. Stays of 7 nights always get 5% off the standard nightly price.","price_legend1":"Demand level (bar to the left of each row)","price_legend2":"Full-week price (7 nights, -5%)","th_period":"Period","th_weekday":"Sun–Thu","th_weekend":"Fri–Sat","th_week":"Full week","th_week_sub":"7 nights","season_winter":"Winter","season_spring":"Spring","season_summer":"Summer","season_autumn":"Autumn","m_jan":"January","m_jan_s":"Jan 1–31","m_feb":"February","m_feb_s":"except Carnival","m_carnaval":"Carnival","m_carnaval_s":"Feb 16–18","m_mar":"March","m_mar_s":"Mar 1–31","m_apr":"April","m_apr_s":"except Holy Week","m_easter":"Holy Week","m_easter_s":"30 Mar – 10 Apr","m_may":"May","m_may_s":"May 1–31","m_jun":"June","m_jun_s":"Jun 1–30","m_jul":"July","m_jul_s":"Jul 1–31","m_aug":"August","m_aug_s":"Aug 1–24 · peak","m_aug2":"August","m_aug2_s":"Aug 25–31 · end of peak","m_sep":"September","m_sep_s":"Sep 1–30","m_oct":"October","m_oct_s":"Oct 1–31","m_nov":"November","m_nov_s":"Nov 1–30","m_dec":"December","m_dec_s":"except holidays","m_newyear":"New Year holidays","m_newyear_s":"20 Dec – 2 Jan","callout_h3":"Thinking of a longer stay","callout_p":"If you stay a full week — very common among surfers and remote workers — you pay the 7-night price with 5% off the sum of the nightly rates, already reflected in the table above. For stays longer than 7 nights, get in touch with us directly.","callout_discount_lbl":"on 7-night bookings","avail_eyebrow":"Availability","avail_h2":"See which dates are already booked.","avail_lede":"The days marked on the calendar are already booked. All the rest are available — send us your dates and we'll confirm.","avail_iframe_title":"Availability calendar for the Refúgio da Maré studio in Ericeira","avail_note":"Can't see the calendar?","avail_note_link":"Open it in a new window","contact_eyebrow":"Bookings","contact_h2":"Ready to book your stay?","contact_lede":"Pick your dates and send your request. We'll receive your email and confirm availability and the final price — we usually reply the same day.","bk_checkin":"Check-in","bk_checkout":"Check-out","bk_guests":"Guests","bk_guest_1":"1 guest","bk_guest_2":"2 guests","bk_guest_3":"3 guests","bk_guest_4":"4 guests","bk_name":"Your name","bk_name_ph":"Name","bk_msg":"Message (optional)","bk_msg_ph":"Any questions or special requests?","bk_submit":"Send booking request","bk_hint":"When you send, your email opens ready-filled to refugiodamare31@gmail.com, with the dates and number of guests. Just hit send.","js_pick_dates":"Pick your check-in and check-out dates to work out the price.","js_out_of_range":"This calculator covers the 2026 rates (up to 2 January 2027, including New Year). For other dates, get in touch with us directly by email.","js_min_night":"The check-out date must be at least one night after the check-in date.","js_night_out":"One or more nights in this range fall outside the 2026 rates covered by this calculator. Get in touch with us directly to confirm the price.","js_night":"night","js_nights":"nights","js_subtotal":"subtotal","js_discount":"Long-stay discount (-5%)","js_avg":"Average per night","js_total":"Total","js_cta":"Request a booking for these dates","bkjs_err_dates":"Pick your check-in and check-out dates.","bkjs_err_order":"The check-out date must be after the check-in date.","bkjs_subject":"Booking request","bkjs_to":"to","bkjs_greeting":"Hello, I'd like to book Refúgio da Maré (Ericeira).","bkjs_l_checkin":"Check-in","bkjs_l_checkout":"Check-out","bkjs_l_guests":"Guests","bkjs_l_name":"Name","bkjs_not_given":"(not given)","bkjs_message":"Message","bkjs_no_message":"(no message)","js_deposit":"Deposit (25%) to book","js_deposit_note":"Paid when you book; we'll arrange the payment method by email.","bkjs_l_total":"Estimated total","bkjs_l_deposit":"Deposit due (25%)","bk_phone":"Phone (with country code)","bk_phone_ph":"+351 912 345 678","bkjs_l_phone":"Phone"},"fr":{"meta_title":"Refúgio da Maré · Studio à Ericeira, à deux pas de la mer","meta_desc":"Refúgio da Maré — studio rénové à Ericeira, à quelques pas du village et de la Réserve mondiale de surf. Tarifs à la nuit et à la semaine, toute l'année.","nav_home_aria":"Refúgio da Maré — accueil","nav_space":"Le logement","nav_photos":"Photos","nav_prices":"Tarifs","nav_availability":"Disponibilités","nav_book":"Réserver","lang_aria":"Langue","hero_eyebrow":"Réserve mondiale de surf · Côte Ouest","hero_h1":"Un studio rénové, à deux pas de l'Atlantique.","hero_p":"Des intérieurs lumineux, du bois naturel et l'essentiel bien pensé — dans le village qui a donné son nom au surf portugais.","sim_h3":"Estimez le prix de votre séjour","sim_p":"Choisissez vos dates d'arrivée et de départ et découvrez aussitôt le prix total, remise longs séjours déjà appliquée.","sim_checkin":"Arrivée","sim_checkout":"Départ","sim_btn":"Calculer le prix","about_eyebrow":"Le logement","about_h2":"Conçu pour se sentir bien en toute saison.","about_lede":"Un studio compact et bien équipé, rénové du sol au plafond, à deux pas du centre du village et des plages d'Ericeira.","about_li1":"Cuisine entièrement équipée, avec four, plaque de cuisson et électroménager complet","about_li2":"Climatisation et chambre avec lit double et penderies de rangement","about_li3":"Salon confortable, décoration soignée aux touches maritimes","about_li4":"Rue calme et résidentielle, à deux pas du village et de la côte","about_li5":"Idéal pour les couples, les surfeurs ou celles et ceux qui cherchent un point d'attache paisible à Ericeira","gal_eyebrow":"À l'intérieur","gal_h2":"Les trois pièces, telles qu'elles sont.","gal_cap1":"Chambre","gal_cap2":"Cuisine & salle à manger","gal_cap3":"Salon","price_eyebrow":"Tarifs 2026","price_h2":"Prix à la nuit, mois par mois.","price_lede":"Les tarifs varient selon la saison — plus élevés en été et pendant les fêtes, plus doux hors saison. Les séjours de 7 nuits bénéficient toujours d'une remise de 5 % sur le prix à la nuit.","price_legend1":"Intensité de la demande (barre à gauche de chaque ligne)","price_legend2":"Prix de la semaine complète (7 nuits, -5 %)","th_period":"Période","th_weekday":"Dim–Jeu","th_weekend":"Ven–Sam","th_week":"Semaine complète","th_week_sub":"7 nuits","season_winter":"Hiver","season_spring":"Printemps","season_summer":"Été","season_autumn":"Automne","m_jan":"Janvier","m_jan_s":"1–31 janv.","m_feb":"Février","m_feb_s":"sauf Carnaval","m_carnaval":"Carnaval","m_carnaval_s":"16–18 févr.","m_mar":"Mars","m_mar_s":"1–31 mars","m_apr":"Avril","m_apr_s":"sauf Semaine sainte","m_easter":"Semaine sainte","m_easter_s":"30 mars – 10 avr.","m_may":"Mai","m_may_s":"1–31 mai","m_jun":"Juin","m_jun_s":"1–30 juin","m_jul":"Juillet","m_jul_s":"1–31 juil.","m_aug":"Août","m_aug_s":"1–24 août · pointe","m_aug2":"Août","m_aug2_s":"25–31 août · fin de pointe","m_sep":"Septembre","m_sep_s":"1–30 sept.","m_oct":"Octobre","m_oct_s":"1–31 oct.","m_nov":"Novembre","m_nov_s":"1–30 nov.","m_dec":"Décembre","m_dec_s":"sauf fêtes","m_newyear":"Fêtes de fin d'année","m_newyear_s":"20 déc. – 2 janv.","callout_h3":"Pensé pour les séjours plus longs","callout_p":"Celles et ceux qui restent une semaine complète — très courant chez les surfeurs et les personnes en télétravail — paient le prix de 7 nuits avec 5 % de remise sur la somme des nuitées, déjà pris en compte dans le tableau ci-dessus. Pour les séjours de plus de 7 nuits, contactez-nous directement.","callout_discount_lbl":"sur les réservations de 7 nuits","avail_eyebrow":"Disponibilités","avail_h2":"Découvrez les dates déjà réservées.","avail_lede":"Les jours indiqués sur le calendrier sont déjà réservés. Toutes les autres dates sont disponibles — envoyez-nous vos dates pour que nous les confirmions.","avail_iframe_title":"Calendrier des disponibilités du studio Refúgio da Maré, à Ericeira","avail_note":"Le calendrier ne s'affiche pas ?","avail_note_link":"Ouvrez-le dans une nouvelle fenêtre","contact_eyebrow":"Réservations","contact_h2":"Envie de réserver votre séjour ?","contact_lede":"Choisissez vos dates et envoyez votre demande. Nous recevons votre e-mail et confirmons la disponibilité et le prix final — nous répondons généralement le jour même.","bk_checkin":"Arrivée","bk_checkout":"Départ","bk_guests":"Voyageurs","bk_guest_1":"1 voyageur","bk_guest_2":"2 voyageurs","bk_guest_3":"3 voyageurs","bk_guest_4":"4 voyageurs","bk_name":"Votre nom","bk_name_ph":"Nom","bk_msg":"Message (facultatif)","bk_msg_ph":"Une question ou une demande particulière ?","bk_submit":"Envoyer la demande de réservation","bk_hint":"En envoyant, votre e-mail s'ouvre déjà prérempli à destination de refugiodamare31@gmail.com, avec les dates et le nombre de voyageurs. Il ne vous reste plus qu'à cliquer sur envoyer.","js_pick_dates":"Choisissez la date d'arrivée et la date de départ pour estimer le prix.","js_out_of_range":"Ce simulateur couvre les tarifs 2026 (jusqu'au 2 janvier 2027, passage à la nouvelle année inclus). Pour d'autres dates, contactez-nous directement par e-mail.","js_min_night":"La date de départ doit être au moins une nuit après la date d'arrivée.","js_night_out":"Une ou plusieurs nuits de cette période se situent en dehors des tarifs 2026 couverts par ce simulateur. Contactez-nous directement pour confirmer le prix.","js_night":"nuit","js_nights":"nuits","js_subtotal":"sous-total","js_discount":"Remise longs séjours (-5 %)","js_avg":"Moyenne par nuit","js_total":"Total","js_cta":"Demander la réservation de ces dates","bkjs_err_dates":"Choisissez les dates d'arrivée et de départ.","bkjs_err_order":"La date de départ doit être postérieure à la date d'arrivée.","bkjs_subject":"Demande de réservation","bkjs_to":"au","bkjs_greeting":"Bonjour, je souhaiterais réserver le Refúgio da Maré (Ericeira).","bkjs_l_checkin":"Arrivée","bkjs_l_checkout":"Départ","bkjs_l_guests":"Voyageurs","bkjs_l_name":"Nom","bkjs_not_given":"(non indiqué)","bkjs_message":"Message","bkjs_no_message":"(sans message)","js_deposit":"Acompte (25 %) pour réserver","js_deposit_note":"À régler à la réservation ; nous conviendrons du mode de paiement par e-mail.","bkjs_l_total":"Total estimé","bkjs_l_deposit":"Acompte à régler (25 %)","bk_phone":"Téléphone (avec indicatif)","bk_phone_ph":"+351 912 345 678","bkjs_l_phone":"Téléphone"}};
 
   // ---------- MOTOR DE IDIOMAS (i18n) ----------
   // Traduz a página para PT / EN / FR. O conteúdo do HTML está em português
@@ -937,6 +952,31 @@
     } else { wire(); }
   })();
 
+  // ---------- LIGAÇÃO DE DATAS ----------
+  // Garante que a data de saída (checkout) nunca é anterior ou igual à de entrada
+  // (checkin): ajusta o mínimo permitido e limpa a saída se ficar inválida.
+  function rdmLinkDates(inEl, outEl){
+    if(!inEl || !outEl) return;
+    var floor = outEl.getAttribute('min') || '';
+    function nextDay(iso){
+      try{
+        var d = new Date(iso + 'T00:00:00Z');
+        d.setUTCDate(d.getUTCDate() + 1);
+        return d.toISOString().slice(0,10);
+      }catch(e){ return iso; }
+    }
+    function sync(){
+      if(!inEl.value){ if(floor) outEl.setAttribute('min', floor); return; }
+      var min = nextDay(inEl.value);
+      if(floor && min < floor) min = floor;
+      outEl.setAttribute('min', min);
+      if(outEl.value && outEl.value < min){ outEl.value = ''; }
+    }
+    inEl.addEventListener('change', sync);
+    inEl.addEventListener('input', sync);
+    sync();
+  }
+
   // ---------- SIMULADOR DE PREÇOS ----------
   // Corre e é ligado cedo para garantir que o botão "Calcular preço" fica
   // sempre operacional. Os textos vêm do motor de idiomas (window.RDM).
@@ -1019,15 +1059,15 @@
       container.innerHTML = '<div class="sim-msg' + (isError ? ' error' : '') + '">' + text + '</div>';
     }
 
-    function calcular(){
-      if(!simIn || !simOut || !simResult) return;
-      var inVal = simIn.value, outVal = simOut.value;
-      if(!inVal || !outVal){ renderMsg(simResult, T('js_pick_dates'), false); return; }
-      if(inVal < MIN_DATE || outVal > MAX_DATE){ renderMsg(simResult, T('js_out_of_range'), true); return; }
+    // Motor de cálculo puro (sem interface) — reutilizado pelo simulador E pelo
+    // pedido de reserva, para que o email inclua o mesmo total e sinal (25%).
+    function computeStay(inVal, outVal){
+      if(!inVal || !outVal) return {ok:false, reason:'pick'};
+      if(inVal < MIN_DATE || outVal > MAX_DATE) return {ok:false, reason:'range'};
       var checkin = new Date(inVal + 'T00:00:00Z');
       var checkout = new Date(outVal + 'T00:00:00Z');
       var nights = Math.round((checkout - checkin) / 86400000);
-      if(!nights || nights < 1){ renderMsg(simResult, T('js_min_night'), true); return; }
+      if(!nights || nights < 1) return {ok:false, reason:'minnight'};
 
       var tally = {}, order = [], subtotal = 0, outOfRange = false;
       for(var tms = checkin.getTime(); tms < checkout.getTime(); tms += 86400000){
@@ -1043,37 +1083,60 @@
         tally[period.label].nights += 1;
         tally[period.label].subtotal += price;
       }
-      if(outOfRange){ renderMsg(simResult, T('js_night_out'), true); return; }
+      if(outOfRange) return {ok:false, reason:'nightout'};
 
       var applyDiscount = nights >= 7;
       var discount = applyDiscount ? subtotal * 0.05 : 0;
       var total = subtotal - discount;
-      var avgPerNight = total / nights;
+      return {
+        ok:true, nights:nights, tally:tally, order:order,
+        subtotal:subtotal, applyDiscount:applyDiscount, discount:discount,
+        total:total, avgPerNight: total / nights, deposit: total * 0.25
+      };
+    }
+
+    // Partilha o motor de preços e o formatador de moeda com o módulo de reserva.
+    if(window.RDM){ window.RDM.computeStay = computeStay; window.RDM.eur = eur; }
+
+    var REASON_MSG = { pick:'js_pick_dates', range:'js_out_of_range', minnight:'js_min_night', nightout:'js_night_out' };
+
+    function calcular(){
+      if(!simIn || !simOut || !simResult) return;
+      var r = computeStay(simIn.value, simOut.value);
+      if(!r.ok){
+        renderMsg(simResult, T(REASON_MSG[r.reason] || 'js_pick_dates'), r.reason !== 'pick');
+        return;
+      }
 
       var rows = '';
-      for(var i=0;i<order.length;i++){
-        var v = tally[order[i]];
+      for(var i=0;i<r.order.length;i++){
+        var v = r.tally[r.order[i]];
         rows += '<li><span>' + T(v.id) + ' — ' + v.nights + ' ' + plural(v.nights) + '</span><span>' + eur(v.subtotal) + '</span></li>';
       }
 
       var html = '<div class="sim-msg">';
       html += '<ul class="sim-breakdown">' + rows + '</ul>';
       html += '<div class="sim-totals">';
-      html += '<div class="row"><span>' + nights + ' ' + plural(nights) + ' · ' + T('js_subtotal') + '</span><span>' + eur(subtotal) + '</span></div>';
-      if(applyDiscount){
-        html += '<div class="row discount"><span>' + T('js_discount') + '</span><span>-' + eur(discount) + '</span></div>';
+      html += '<div class="row"><span>' + r.nights + ' ' + plural(r.nights) + ' · ' + T('js_subtotal') + '</span><span>' + eur(r.subtotal) + '</span></div>';
+      if(r.applyDiscount){
+        html += '<div class="row discount"><span>' + T('js_discount') + '</span><span>-' + eur(r.discount) + '</span></div>';
       }
-      html += '<div class="row"><span>' + T('js_avg') + '</span><span>' + eur(avgPerNight) + '</span></div>';
-      html += '<div class="row total"><span>' + T('js_total') + '</span><span>' + eur(total) + '</span></div>';
+      html += '<div class="row"><span>' + T('js_avg') + '</span><span>' + eur(r.avgPerNight) + '</span></div>';
+      html += '<div class="row total"><span>' + T('js_total') + '</span><span>' + eur(r.total) + '</span></div>';
+      html += '<div class="row deposit"><span>' + T('js_deposit') + '</span><span>' + eur(r.deposit) + '</span></div>';
       html += '</div>';
+      html += '<p class="sim-deposit-note">' + T('js_deposit_note') + '</p>';
       html += '<a class="btn" href="#contacto" style="margin-top:16px; width:100%; justify-content:center; color:var(--white);">' + T('js_cta') + ' &rarr;</a>';
       html += '</div>';
       simResult.innerHTML = html;
 
       var bkIn = document.getElementById('bk-checkin');
       var bkOut = document.getElementById('bk-checkout');
-      if(bkIn) bkIn.value = inVal;
-      if(bkOut) bkOut.value = outVal;
+      if(bkIn) bkIn.value = simIn.value;
+      if(bkOut) bkOut.value = simOut.value;
+      // Transpõe as datas (e o resumo de preço/sinal) para o formulário de reserva.
+      if(bkIn){ try{ bkIn.dispatchEvent(new Event('change', {bubbles:true})); }catch(e){} }
+      if(bkOut){ try{ bkOut.dispatchEvent(new Event('change', {bubbles:true})); }catch(e){} }
     }
 
     function wireUp(){
@@ -1083,6 +1146,7 @@
       simResult = document.getElementById('sim-result');
       if(!simIn || !simOut || !simBtn || !simResult) return;
       simBtn.addEventListener('click', function(){ calcular(); });
+      rdmLinkDates(simIn, simOut);
       [simIn, simOut].forEach(function(inputEl){
         inputEl.addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ calcular(); } });
       });
@@ -1145,6 +1209,7 @@
       var co = val('bk-checkout');
       var guests = val('bk-guests') || '2';
       var name = (val('bk-name') || '').trim();
+      var phone = (val('bk-phone') || '').trim();
       var msg = (val('bk-msg') || '').trim();
       var err = document.getElementById('bk-error');
       if(err) err.textContent = '';
@@ -1152,30 +1217,68 @@
       if(!ci || !co){ if(err) err.textContent = T('bkjs_err_dates'); return; }
       if(co <= ci){ if(err) err.textContent = T('bkjs_err_order'); return; }
 
+      // Reutiliza o motor de preços do simulador para calcular total e sinal (25%).
+      var stay = (window.RDM && window.RDM.computeStay) ? window.RDM.computeStay(ci, co) : null;
+      var money = (window.RDM && window.RDM.eur) ? window.RDM.eur : function(n){ return Math.round(n) + ' €'; };
+
       var subject = T('bkjs_subject') + ' — ' + ci + ' ' + T('bkjs_to') + ' ' + co;
-      var body = [
+      var lines = [
         T('bkjs_greeting'),
         '',
         T('bkjs_l_checkin') + ': ' + ci,
         T('bkjs_l_checkout') + ': ' + co,
-        T('bkjs_l_guests') + ': ' + guests,
-        T('bkjs_l_name') + ': ' + (name || T('bkjs_not_given')),
-        '',
-        T('bkjs_message') + ':',
-        (msg || T('bkjs_no_message'))
-      ].join('\n');
+        T('bkjs_l_guests') + ': ' + guests
+      ];
+      if(stay && stay.ok){
+        lines.push(T('bkjs_l_total') + ': ' + money(stay.total));
+        lines.push(T('bkjs_l_deposit') + ': ' + money(stay.deposit));
+      }
+      lines.push(T('bkjs_l_name') + ': ' + (name || T('bkjs_not_given')));
+      lines.push(T('bkjs_l_phone') + ': ' + (phone || T('bkjs_not_given')));
+      lines.push('');
+      lines.push(T('bkjs_message') + ':');
+      lines.push(msg || T('bkjs_no_message'));
+      var body = lines.join('\n');
 
       window.location.href = 'mailto:' + DEST +
         '?subject=' + encodeURIComponent(subject) +
         '&body=' + encodeURIComponent(body);
     }
 
+    // Mostra o total e o sinal (25%) no próprio formulário de reserva, para o
+    // cliente confirmar a informação final antes de enviar. Recalcula a cada
+    // mudança de datas (e quando as datas são transpostas do simulador).
+    function updateSummary(){
+      var box = document.getElementById('bk-summary');
+      if(!box) return;
+      var stay = (window.RDM && window.RDM.computeStay) ? window.RDM.computeStay(val('bk-checkin'), val('bk-checkout')) : null;
+      if(!stay || !stay.ok){ box.hidden = true; box.innerHTML = ''; return; }
+      var money = (window.RDM && window.RDM.eur) ? window.RDM.eur : function(n){ return Math.round(n) + ' €'; };
+      box.innerHTML =
+        '<div class="bk-sum-row"><span>' + T('bkjs_l_total') + '</span><span>' + money(stay.total) + '</span></div>' +
+        '<div class="bk-sum-row deposit"><span>' + T('js_deposit') + '</span><span>' + money(stay.deposit) + '</span></div>' +
+        '<p class="bk-sum-note">' + T('js_deposit_note') + '</p>';
+      box.hidden = false;
+    }
+
     function wire(){
       var form = document.getElementById('booking-form');
       if(!form) return;
       form.addEventListener('submit', function(ev){ ev.preventDefault(); enviarPedido(); });
+      var bkIn = document.getElementById('bk-checkin');
+      var bkOut = document.getElementById('bk-checkout');
+      if(typeof rdmLinkDates === 'function'){ rdmLinkDates(bkIn, bkOut); }
+      [bkIn, bkOut].forEach(function(el){
+        if(!el) return;
+        el.addEventListener('change', updateSummary);
+        el.addEventListener('input', updateSummary);
+      });
+      updateSummary();
       if(window.RDM && window.RDM.onLang){
-        window.RDM.onLang(function(){ var e = document.getElementById('bk-error'); if(e) e.textContent = ''; });
+        window.RDM.onLang(function(){
+          var e = document.getElementById('bk-error'); if(e) e.textContent = '';
+          updateSummary();
+        });
       }
     }
 
